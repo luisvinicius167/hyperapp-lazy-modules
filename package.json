@@ -1,18 +1,17 @@
 {
-  "name": "hyperapp-lazy-components",
+  "name": "hyperapp-lazy-component",
   "version": "0.0.1",
-  "description": "Fully Lazy Components for Hyperapp applications",
-  "main": "dist/hyperapp-lazy-components.js",
-  "umd:main": "dist/hyperapp-lazy-components.umd.js",
-  "module": "dist/hyperapp-lazy-components.m.js",
+  "description": "Lazyload your Hyperapp Modules with their own view, actions and state.",
+  "main": "dist/hyperapp-lazy-modules.js",
+  "umd:main": "dist/hyperapp-lazy-modules.umd.js",
+  "module": "dist/hyperapp-lazy-modules.m.js",
   "source": "src/index.js",
   "scripts": {
-    "build": "microbundle",
+    "build": "microbundle --sourcemap false --name hyperappLazyModules",
     "dev": "microbundle watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "hyperapp": "^1.2.6",
     "microbundle": "^0.6.0"
   },
   "devDependencies": {

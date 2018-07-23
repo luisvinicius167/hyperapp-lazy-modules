@@ -6,28 +6,27 @@ const CACHED_VIEWS = {}
 
 /**
  * @name createLazy
- * @description The container that will create the lazy components
- * @param {Function} app Hyperapp app
- * @param {Element} container The Element that the lazy component
- * will be loaded 
+ * @description The container that will create the lazy modules
+ * @param {Function} app The hyperapp app function
+ * @param {Element} container The Element that your app will be mounted
  * 
  * @example
  * const modules = {
  *  home: {
- *     component: import('./myModule'),
+ *     view: import('./myModule'),
  *     actions: import('./myModule/actions.js'),
  *     state: import('./myModule/state.js')
  *   }
  * }
- * const { actions, state } = createLazy(app, container)(modules, { loading: <Component /> })
+ * const { actions, state } = createLazy(app, container)(modules, fetching => <Loading fetching={fetching}/>)
  * 
- * @returns {Function} A lazy function to set the modules and
- * the loading component
+ * @returns {Function}
+ * @param {Object} modules 
  */
 export function createLazy(app, container) {
-  return (modules, loading) => {
+  return (modules, isFetching) => {
     createLazy.modules = modules
-    createLazy.loading = loading
+    createLazy.isFetching = isFetching
     createLazy.app = app
     createLazy.container = container
     
@@ -36,7 +35,7 @@ export function createLazy(app, container) {
      * @returns {Object} 
      * 
      * @example
-     * const { actions, state } = createLazy(app, container)(modules, { loading: <Component /> })
+     * const { actions, state } = createLazy(app, container)(modules, fetching => <Loading fetching={fetching}/>)
      * 
      * const appState = {
      *   ...state,
@@ -54,15 +53,15 @@ export function createLazy(app, container) {
       actions: {
         fetching: (fetching) => () => ({ fetching }),
         lazy: {
-          fetching: () => () => ({ lazy: { loading: true, props: undefined } }), 
-          loaded: (view) => () => ({ lazy: { view, loading: false, props: undefined } })
+          fetching: () => () => ({ lazy: { fetching: true, props: undefined } }), 
+          loaded: (view) => () => ({ lazy: { view, fetching: false, props: undefined } })
         }
       },
       state: {
       fetching: false,
         lazy: {
           view: null,
-          loading: true,
+          fetching: true,
           props: undefined
         }
       }
@@ -91,20 +90,20 @@ const getModule = module => module.default ? module.default : module
  * the page.
  *  
  */
-const render = ({ component, state, actions, props }) => {
+const render = ({ view, state, actions, props }) => {
   const container = createLazy.container
-  const appstate = assign(state, { lazy: { props, loading: false } })
-  createLazy.app(appstate, actions, component, container)
+  const appstate = assign(state, { lazy: { props, fetching: false } })
+  createLazy.app(appstate, actions, view, container)
   state.fetching && actions.fetching(false)
 }
 
 const renderComponent = (data) => {
   const parentState = data.state
   const parentActions = data.actions
-    const cacheModule = CACHED_VIEWS[data.component]
+    const cacheModule = CACHED_VIEWS[data.module]
     
     return render({
-      component: cacheModule.component,
+      view: cacheModule.view,
       actions: assign({}, parentActions, cacheModule.actions),
       state: assign({}, parentState, cacheModule.state),
       props: data.props
@@ -119,22 +118,22 @@ const renderComponent = (data) => {
  */
 const loadModule = data => {
   Promise.all([
-    createLazy.modules[data.component].component,
-    createLazy.modules[data.component].actions,
-    createLazy.modules[data.component].state
+    createLazy.modules[data.module].view,
+    createLazy.modules[data.module].actions,
+    createLazy.modules[data.module].state
   ]).then(module => {
-    const [component, actions, state] = module
-    const lazyComponent = getModule(component)
-    CACHED_VIEWS[data.component] = {
-      component: lazyComponent,
-      state: getModule(state),
+    const [view, actions, state] = module
+    const lazyComponent = getModule(view)
+    CACHED_VIEWS[data.module] = {
+      view: lazyComponent,
+      state: getModule(state || {}),
       actions: getModule(actions),
     }
     data.state.fetching && data.actions.lazy.loaded(lazyComponent, false)
   })
   
   !data.state.fetching && data.actions.fetching(true)
-  return data.state.fetching && createLazy.app(true, {}, createLazy.loading(true), createLazy.container.children[0])
+  return data.state.fetching && createLazy.app(true, {}, createLazy.isFetching(true), createLazy.container.children[0])
 }
 
 /**
@@ -144,7 +143,7 @@ const loadModule = data => {
  * 
  * @returns {Function}
  */
-export const Lazy = ({ component, props }) =>
+export const Lazy = ({ module, props }) =>
   (state, actions) => {
-    return CACHED_VIEWS[component] ? renderComponent({ component, state, actions, props }) : loadModule({ component, state, actions, props })
+    return CACHED_VIEWS[module] ? renderComponent({ module, state, actions, props }) : loadModule({ module, state, actions, props })
   }
