@@ -1,0 +1,24 @@
+{
+  "name": "hyperapp-lazy-components",
+  "version": "0.0.1",
+  "description": "Fully Lazy Components for Hyperapp applications",
+  "main": "dist/hyperapp-lazy-components.js",
+  "umd:main": "dist/hyperapp-lazy-components.umd.js",
+  "module": "dist/hyperapp-lazy-components.m.js",
+  "source": "src/index.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "hyperapp": "^1.2.6",
+    "microbundle": "^0.6.0"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1"
+  },
+  "author": "",
+  "license": "MIT"
+}
