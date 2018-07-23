@@ -1,9 +1,7 @@
-# <img height=24 src=https://cdn.rawgit.com/jorgebucaran/f53d2c00bafcf36e84ffd862f0dc2950/raw/882f20c970ff7d61aa04d44b92fc3530fa758bc0/Hyperapp.svg> Hyperapp-Lazy-Components
-
-[![npm](https://img.shields.io/npm/v/hyperapp.svg)](https://www.npmjs.org/package/hyperapp-lazy-components)
+# <img height=24 src=https://cdn.rawgit.com/jorgebucaran/f53d2c00bafcf36e84ffd862f0dc2950/raw/882f20c970ff7d61aa04d44b92fc3530fa758bc0/Hyperapp.svg> hyperapp-lazy-modules
 
 
-Lazyload your Hyperapp Modules with their own view, actions and state.
+Lazyload your hyperapp modules with their own view, actions and state.
 
 ## The Gist
 
