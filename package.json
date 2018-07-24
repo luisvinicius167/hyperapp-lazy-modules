@@ -1,5 +1,5 @@
 {
-  "name": "hyperapp-lazy-component",
+  "name": "hyperapp-lazy-modules",
   "version": "0.0.1",
   "description": "Lazyload your Hyperapp Modules with their own view, actions and state.",
   "main": "dist/hyperapp-lazy-modules.js",
