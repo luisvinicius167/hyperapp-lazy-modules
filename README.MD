@@ -3,6 +3,8 @@
 
 Lazyload your hyperapp modules with their own view, actions and state.
 
+<img height=400 src="https://cdn.rawgit.com/luisvinicius167/hyperapp-lazy-modules/74efed5d/img/lazy-modules.gif" />
+
 ## The Gist
 
 ```jsx
@@ -155,7 +157,9 @@ const modules = {
   }
 }
 
-// When your component are fetching, the fetching function will be called.
+const container = document.querySelector('#app')
+
+// When your module are fetching, the fetching handler will be returned.
 const { actions, state } = createLazy(app, container)(modules, fetching => <h1>Fetching...</h1>)
 ```
 
