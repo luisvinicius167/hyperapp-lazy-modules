@@ -94,7 +94,6 @@ const render = ({ view, state, actions, props }) => {
   const container = createLazy.container
   const appstate = assign(state, { lazy: { props, fetching: false } })
   createLazy.app(appstate, actions, view, container)
-  state.fetching && actions.fetching(false)
 }
 
 const renderComponent = (data) => {
